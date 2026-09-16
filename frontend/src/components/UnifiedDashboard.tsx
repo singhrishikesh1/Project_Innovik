@@ -337,10 +337,11 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setShowSosModal(true)}
-            className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-[0_0_15px_rgba(239,68,68,0.5)] active:scale-95 animate-pulse transition-all border border-red-400/40"
-            title="Transmit Emergency SOS Distress Beacon"
+            className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-medium flex items-center gap-2 transition-all active:scale-95 shadow-sm"
+            title="Send Emergency SOS Distress Signal"
           >
-            <span>🚨 SOS</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+            <span>SOS</span>
           </button>
           {/* Simulation Studio Trigger */}
           <button
@@ -479,10 +480,11 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({
             <div className="flex items-center gap-2.5">
           <button
             onClick={() => setShowSosModal(true)}
-            className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-[0_0_15px_rgba(239,68,68,0.5)] active:scale-95 animate-pulse transition-all border border-red-400/40"
-            title="Transmit Emergency SOS Distress Beacon"
+            className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-medium flex items-center gap-2 transition-all active:scale-95 shadow-sm"
+            title="Send Emergency SOS Distress Signal"
           >
-            <span>🚨 SOS</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+            <span>SOS</span>
           </button>
               <span className="font-semibold text-sm text-slate-100">Tactical GIS Disaster Map (Leaflet)</span>
               <span className="px-2 py-0.5 rounded text-[10px] font-mono tracking-wider bg-sky-950/60 border border-sky-500/40 text-sky-400 uppercase font-semibold">
@@ -582,10 +584,11 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({
               <div className="flex items-center gap-2.5">
           <button
             onClick={() => setShowSosModal(true)}
-            className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-[0_0_15px_rgba(239,68,68,0.5)] active:scale-95 animate-pulse transition-all border border-red-400/40"
-            title="Transmit Emergency SOS Distress Beacon"
+            className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-medium flex items-center gap-2 transition-all active:scale-95 shadow-sm"
+            title="Send Emergency SOS Distress Signal"
           >
-            <span>🚨 SOS</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+            <span>SOS</span>
           </button>
                 <h3 className="font-semibold text-base text-slate-100">Dynamic Evacuation Router</h3>
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono tracking-wider bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 uppercase font-semibold">
@@ -660,10 +663,11 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({
               <div className="flex items-center gap-2.5">
           <button
             onClick={() => setShowSosModal(true)}
-            className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-[0_0_15px_rgba(239,68,68,0.5)] active:scale-95 animate-pulse transition-all border border-red-400/40"
-            title="Transmit Emergency SOS Distress Beacon"
+            className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-medium flex items-center gap-2 transition-all active:scale-95 shadow-sm"
+            title="Send Emergency SOS Distress Signal"
           >
-            <span>🚨 SOS</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+            <span>SOS</span>
           </button>
                 <h3 className="font-semibold text-base text-slate-100">NLP Incident Triage & News Grounding</h3>
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono tracking-wider bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 uppercase font-semibold">

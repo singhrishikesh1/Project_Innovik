@@ -1,18 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  AlertTriangle, 
-  MapPin, 
-  Phone, 
-  Send, 
-  CheckCircle2, 
-  X, 
-  Radio, 
-  Users, 
-  Navigation, 
-  ShieldAlert,
-  Clock,
-  ExternalLink
-} from 'lucide-react';
+import { X, Navigation, Phone, CheckCircle2, ArrowRight } from 'lucide-react';
 
 interface SosModalProps {
   isOpen: boolean;
@@ -20,365 +7,274 @@ interface SosModalProps {
   onSosBroadcast?: (sosRecord: any) => void;
 }
 
+const EMERGENCY_CATEGORIES = [
+  'Flood Inundation',
+  'Medical Emergency',
+  'Trapped / Landslide',
+  'Supplies Depleted',
+  'General Distress'
+];
+
 export const SosModal: React.FC<SosModalProps> = ({
   isOpen,
   onClose,
   onSosBroadcast
 }) => {
-  const [emergencyType, setEmergencyType] = useState('Rising Floodwater / Trapped');
+  const [category, setCategory] = useState(EMERGENCY_CATEGORIES[0]);
   const [message, setMessage] = useState('');
-  const [locationText, setLocationText] = useState('Pipalkoti Lower Riverbank Settlement, Chamoli');
-  const [gpsCoords, setGpsCoords] = useState<{ lat: number; lng: number } | null>({ lat: 30.4182, lng: 79.3289 });
+  const [location, setLocation] = useState('Pipalkoti Lower Riverbank, Chamoli');
+  const [phone, setPhone] = useState('');
+  const [peopleCount, setPeopleCount] = useState('2');
   const [isLocating, setIsLocating] = useState(false);
-  const [peopleCount, setPeopleCount] = useState('3');
-  const [contactPhone, setContactPhone] = useState('');
-  const [reporterName, setReporterName] = useState('');
-  const [submittedTicket, setSubmittedTicket] = useState<any | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState<any | null>(null);
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleGetLocation = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser');
-      return;
-    }
+  const handleUseGps = () => {
+    if (!navigator.geolocation) return;
     setIsLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setGpsCoords({
-          lat: parseFloat(position.coords.latitude.toFixed(5)),
-          lng: parseFloat(position.coords.longitude.toFixed(5))
-        });
-        setLocationText(`GPS Locked: ${position.coords.latitude.toFixed(4)}°N, ${position.coords.longitude.toFixed(4)}°E`);
+      (pos) => {
+        setLocation(`${pos.coords.latitude.toFixed(4)}°N, ${pos.coords.longitude.toFixed(4)}°E`);
         setIsLocating(false);
       },
-      (err) => {
-        console.warn('Geolocation error, using Chamoli fallback:', err);
+      () => {
         setIsLocating(false);
-        setLocationText('Chamoli District Relief Sector (GPS Fallback)');
       },
-      { timeout: 10000, enableHighAccuracy: true }
+      { timeout: 8000 }
     );
-  };
-
-  const playSosAlertSound = () => {
-    try {
-      if ('AudioContext' in window || 'webkitAudioContext' in window) {
-        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-        const ctx = new AudioCtx();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(880, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.3);
-        gain.gain.setValueAtTime(0.3, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.45);
-      }
-    } catch (e) {
-      // Audio fallback
-    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    playSosAlertSound();
+    setLoading(true);
 
     setTimeout(() => {
-      const ticketId = `SOS-IN-${Math.floor(1000 + Math.random() * 9000)}`;
-      const newRecord = {
-        id: ticketId,
-        type: emergencyType,
-        message: message || 'Urgent evacuation requested. Water level rising rapidly.',
-        location: locationText,
-        coords: gpsCoords || { lat: 30.4182, lng: 79.3289 },
-        peopleCount: parseInt(peopleCount) || 2,
-        contact: contactPhone || '+91 98765-XXXXX',
-        reporter: reporterName || 'Citizen in Distress',
-        timestamp: new Date().toLocaleTimeString(),
-        priority: 'CRITICAL - LEVEL 4',
-        status: 'DISPATCHED_TO_NDRF'
+      const record = {
+        id: `SOS-${Math.floor(1000 + Math.random() * 9000)}`,
+        category,
+        message: message || 'Urgent evacuation support needed.',
+        location,
+        phone: phone || 'Not provided',
+        peopleCount: parseInt(peopleCount, 10) || 1,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
-
-      setSubmittedTicket(newRecord);
-      setIsSubmitting(false);
-
-      if (onSosBroadcast) {
-        onSosBroadcast(newRecord);
-      }
-    }, 800);
+      setSubmitted(record);
+      setLoading(false);
+      if (onSosBroadcast) onSosBroadcast(record);
+    }, 600);
   };
 
   const handleReset = () => {
-    setSubmittedTicket(null);
+    setSubmitted(null);
     setMessage('');
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-[#0b101e] border-2 border-red-500/50 rounded-2xl max-w-xl w-full p-6 shadow-[0_0_50px_rgba(239,68,68,0.3)] animate-in fade-in zoom-in-95 relative my-auto">
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
+      <div className="bg-[#0c1017] border border-white/10 rounded-xl max-w-md w-full p-6 shadow-2xl text-left font-sans">
         
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
+        {/* Header */}
+        <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-5">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-red-500"></span>
+            <h3 className="text-sm font-semibold text-white tracking-wide uppercase font-mono">
+              Emergency Distress Signal
+            </h3>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-slate-400 hover:text-white p-1 rounded hover:bg-white/5 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
 
-        {!submittedTicket ? (
-          <form onSubmit={handleSubmit} className="space-y-4 text-left">
-            {/* Header Banner */}
-            <div className="flex items-center gap-3 pb-3 border-b border-white/10">
-              <div className="w-11 h-11 rounded-xl bg-red-600/20 border border-red-500/50 flex items-center justify-center text-red-400 shrink-0 animate-pulse">
-                <ShieldAlert className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  Emergency SOS Distress Signal
-                  <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-red-950 border border-red-500/40 text-red-400">
-                    Live EOC Dispatch
-                  </span>
-                </h3>
-                <p className="text-xs text-slate-400">
-                  Broadcast directly to NDRF, SDRF, and Emergency Operations Command (EOC).
-                </p>
-              </div>
-            </div>
-
-            {/* Quick Emergency Type Presets */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Select Nature of Emergency
+        {!submitted ? (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            
+            {/* Minimal Category Pills */}
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-medium text-slate-400">
+                Nature of emergency
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                {[
-                  { id: 'flood', label: '🌊 Rising Flood / Trapped' },
-                  { id: 'medical', label: '🚑 Medical / Critical Trauma' },
-                  { id: 'landslide', label: '⛰️ Landslide / Road Block' },
-                  { id: 'food', label: '🍞 Food & Water Cutoff' },
-                  { id: 'elderly', label: '👵 Elderly / Infant Risk' },
-                  { id: 'other', label: '⚠️ Other Urgent Need' },
-                ].map((item) => (
+              <div className="flex flex-wrap gap-1.5">
+                {EMERGENCY_CATEGORIES.map((c) => (
                   <button
                     type="button"
-                    key={item.id}
-                    onClick={() => setEmergencyType(item.label)}
-                    className={`px-3 py-2 rounded-xl text-left font-medium text-xs transition-all border ${
-                      emergencyType === item.label
-                        ? 'bg-red-950/60 border-red-500 text-red-200 shadow-sm'
-                        : 'bg-white/[0.03] border-white/10 text-slate-300 hover:border-white/20'
+                    key={c}
+                    onClick={() => setCategory(c)}
+                    className={`px-3 py-1 rounded-md text-xs transition-all border ${
+                      category === c
+                        ? 'bg-white/15 text-white border-white/30 font-medium'
+                        : 'bg-white/[0.02] text-slate-400 border-white/5 hover:text-slate-200 hover:border-white/15'
                     }`}
                   >
-                    {item.label}
+                    {c}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Distress Message Textarea */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center justify-between">
-                <span>Emergency Distress Message</span>
-                <span className="text-[10px] text-slate-500 font-mono">Speak directly to responders</span>
+            {/* Message Input */}
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-medium text-slate-400">
+                Situation details
               </label>
               <textarea
-                required
                 rows={3}
-                placeholder="E.g., Water reached 1st floor. 3 people including child trapped on rooftop near Alaknanda bridge. Need urgent boat evacuation..."
+                required
+                placeholder="Describe your situation, landmarks, or immediate dangers..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-[#070c18] border border-white/15 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all resize-none"
+                className="w-full px-3 py-2 rounded-lg bg-[#06080e] border border-white/10 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-slate-400 resize-none transition-colors"
               />
             </div>
 
-            {/* Location & Real GPS */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-red-400" />
-                  <span>Exact Location / Landmark</span>
+            {/* Location Input */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-medium text-slate-400">
+                  Location or landmark
                 </label>
                 <button
                   type="button"
-                  onClick={handleGetLocation}
+                  onClick={handleUseGps}
                   disabled={isLocating}
-                  className="text-[11px] font-mono text-sky-400 hover:text-sky-300 flex items-center gap-1 px-2 py-0.5 rounded bg-sky-950/40 border border-sky-500/30"
+                  className="text-[10px] text-sky-400 hover:text-sky-300 flex items-center gap-1 font-mono"
                 >
                   <Navigation className={`w-3 h-3 ${isLocating ? 'animate-spin' : ''}`} />
-                  {isLocating ? 'Locating...' : 'Use My Live GPS'}
+                  {isLocating ? 'Locating...' : 'Use GPS'}
                 </button>
               </div>
               <input
                 type="text"
                 required
-                placeholder="Village, street, landmark or kilometer marker"
-                value={locationText}
-                onChange={(e) => setLocationText(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-xl bg-[#070c18] border border-white/15 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500 font-mono"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="Village, street, bridge or landmark"
+                className="w-full px-3 py-2 rounded-lg bg-[#06080e] border border-white/10 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-slate-400 transition-colors"
               />
-              {gpsCoords && (
-                <div className="text-[10px] font-mono text-emerald-400 mt-1 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                  <span>Coordinates: {gpsCoords.lat}° N, {gpsCoords.lng}° E</span>
-                </div>
-              )}
             </div>
 
-            {/* Trapped People & Contact Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  People in Danger
+            {/* People & Contact (2-column compact grid) */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-medium text-slate-400">
+                  Persons needing aid
                 </label>
                 <select
                   value={peopleCount}
                   onChange={(e) => setPeopleCount(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-[#070c18] border border-white/15 text-xs text-white focus:outline-none focus:border-red-500"
+                  className="w-full px-3 py-2 rounded-lg bg-[#06080e] border border-white/10 text-xs text-slate-100 focus:outline-none focus:border-slate-400"
                 >
-                  <option value="1">1 Person</option>
-                  <option value="2">2 People</option>
-                  <option value="3">3 People</option>
-                  <option value="4">4 People</option>
-                  <option value="5">5+ (Family / Group)</option>
-                  <option value="10">10+ (Multiple Households)</option>
+                  <option value="1">1 person</option>
+                  <option value="2">2 people</option>
+                  <option value="3">3 people</option>
+                  <option value="4">4 people</option>
+                  <option value="5">5+ people</option>
+                  <option value="10">10+ people</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Contact Phone / WhatsApp
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-medium text-slate-400">
+                  Contact number
                 </label>
                 <input
                   type="tel"
-                  placeholder="+91 98765-43210"
-                  value={contactPhone}
-                  onChange={(e) => setContactPhone(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-[#070c18] border border-white/15 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500 font-mono"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Your Name (Optional)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Citizen / Family Head"
-                  value={reporterName}
-                  onChange={(e) => setReporterName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-[#070c18] border border-white/15 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500"
+                  placeholder="+91 98765-XXXXX"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg bg-[#06080e] border border-white/10 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-slate-400 font-mono"
                 />
               </div>
             </div>
 
-            {/* Direct Helpline Hotlines */}
-            <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 flex items-center justify-between text-xs text-slate-400">
-              <span className="flex items-center gap-1.5 font-medium text-slate-300">
-                <Phone className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Instant National Helplines:</span>
-              </span>
-              <div className="flex gap-2 font-mono text-[11px]">
-                <a href="tel:112" className="px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-300 border border-emerald-500/30 hover:underline">
-                  Dial 112 (ERSS)
-                </a>
-                <a href="tel:1077" className="px-2 py-0.5 rounded bg-sky-950/60 text-sky-300 border border-sky-500/30 hover:underline">
-                  Dial 1077 (Disaster)
-                </a>
+            {/* Direct Helpline Minimal Text */}
+            <div className="flex items-center justify-between pt-1 text-[11px] text-slate-400 font-mono">
+              <span>National Helplines:</span>
+              <div className="flex gap-3">
+                <a href="tel:112" className="hover:text-white underline">112 (Police/ERSS)</a>
+                <a href="tel:1077" className="hover:text-white underline">1077 (Disaster)</a>
               </div>
             </div>
 
-            {/* Submit SOS Button */}
-            <div className="pt-2 flex items-center justify-end gap-3">
+            {/* Footer Actions */}
+            <div className="pt-3 flex items-center justify-end gap-2.5 border-t border-white/[0.08]">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs text-slate-300 font-medium transition-colors"
+                className="px-3.5 py-2 rounded-lg text-xs text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs shadow-[0_0_25px_rgba(239,68,68,0.5)] flex items-center justify-center gap-2 transition-all active:scale-95"
+                disabled={loading}
+                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white font-medium text-xs transition-colors flex items-center gap-1.5 shadow-sm active:scale-95"
               >
-                <Radio className="w-4 h-4 animate-spin" />
-                {isSubmitting ? 'Transmitting Distress Beacon...' : 'TRANSMIT SOS TO RESCUE COMMAND'}
+                <span>{loading ? 'Sending...' : 'Transmit SOS'}</span>
+                {!loading && <ArrowRight className="w-3.5 h-3.5" />}
               </button>
             </div>
+
           </form>
         ) : (
-          /* Confirmation Screen */
-          <div className="space-y-5 text-center py-4">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center text-emerald-400 mx-auto animate-bounce">
-              <CheckCircle2 className="w-10 h-10" />
-            </div>
-
-            <div>
-              <h3 className="text-xl font-extrabold text-white">
-                SOS Distress Signal Transmitted!
-              </h3>
-              <p className="text-xs text-emerald-400 font-mono mt-1">
-                Priority: {submittedTicket.priority} · Ticket: {submittedTicket.id}
-              </p>
-            </div>
-
-            <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 text-left text-xs space-y-2.5 font-mono">
-              <div className="flex justify-between border-b border-white/5 pb-1.5">
-                <span className="text-slate-400">Target Category:</span>
-                <span className="text-white font-semibold">{submittedTicket.type}</span>
+          /* Clean Minimal Confirmation View */
+          <div className="space-y-4 py-2">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                <CheckCircle2 className="w-4 h-4" />
               </div>
-              <div className="flex justify-between border-b border-white/5 pb-1.5">
-                <span className="text-slate-400">Reported Location:</span>
-                <span className="text-sky-300 font-semibold">{submittedTicket.location}</span>
-              </div>
-              <div className="flex justify-between border-b border-white/5 pb-1.5">
-                <span className="text-slate-400">Persons Requiring Aid:</span>
-                <span className="text-amber-400 font-semibold">{submittedTicket.peopleCount} Stranded</span>
-              </div>
-              <div className="flex justify-between border-b border-white/5 pb-1.5">
-                <span className="text-slate-400">Assigned Rescue Unit:</span>
-                <span className="text-emerald-300 font-bold">NDRF 8th Battalion · Fast Boat Unit 2</span>
-              </div>
-              <div className="flex justify-between pt-1">
-                <span className="text-slate-400">Estimated Response Time:</span>
-                <span className="text-red-400 font-bold animate-pulse">~12 Minutes (En Route)</span>
+              <div>
+                <h4 className="text-sm font-semibold text-white">Distress Signal Broadcasted</h4>
+                <p className="text-xs text-slate-400 font-mono">Reference: {submitted.id} · Priority: High</p>
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-red-950/40 border border-red-500/30 text-xs text-red-200 text-left space-y-1">
-              <div className="font-semibold flex items-center gap-1.5">
-                <AlertTriangle className="w-4 h-4 text-red-400" />
-                Crucial Survival Instructions:
+            <div className="p-3.5 rounded-lg bg-[#06080e] border border-white/10 text-xs space-y-1.5 font-mono">
+              <div className="flex justify-between text-slate-400">
+                <span>Category:</span>
+                <span className="text-slate-200 font-medium">{submitted.category}</span>
               </div>
-              <ul className="list-disc pl-5 space-y-1 text-[11px] text-slate-300">
-                <li>Move to the highest solid ground or reinforced upper floor.</li>
-                <li>Do NOT attempt to wade or drive across flooded streams or torrents.</li>
-                <li>Keep phone battery conserved; signal rescuers with flashlight or bright cloth.</li>
-              </ul>
+              <div className="flex justify-between text-slate-400">
+                <span>Location:</span>
+                <span className="text-slate-200">{submitted.location}</span>
+              </div>
+              <div className="flex justify-between text-slate-400">
+                <span>Persons:</span>
+                <span className="text-slate-200">{submitted.peopleCount} reported</span>
+              </div>
+              <div className="flex justify-between text-slate-400 pt-1 border-t border-white/5">
+                <span>Status:</span>
+                <span className="text-emerald-400 font-semibold">Dispatched to Local Unit</span>
+              </div>
             </div>
 
-            <div className="flex gap-3 pt-2">
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              Stay on high ground. First responders and local rescue coordination have received your coordinates.
+            </p>
+
+            <div className="flex gap-2 pt-2">
               <a
                 href="tel:112"
-                className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2"
+                className="flex-1 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs font-medium text-center flex items-center justify-center gap-1.5"
               >
-                <Phone className="w-4 h-4" />
-                Call 112 Control Room
+                <Phone className="w-3.5 h-3.5" />
+                <span>Call 112</span>
               </a>
               <button
                 onClick={handleReset}
-                className="flex-1 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-xs"
+                className="flex-1 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-medium transition-colors"
               >
-                Return to Dashboard
+                Done
               </button>
             </div>
           </div>
         )}
+
       </div>
     </div>
   );

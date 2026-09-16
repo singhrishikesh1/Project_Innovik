@@ -127,11 +127,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* HIGH-PRIORITY SOS EMERGENCY BUTTON */}
           <button
             onClick={() => setShowSosModal(true)}
-            className="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs tracking-wider flex items-center gap-1.5 shadow-[0_0_20px_rgba(239,68,68,0.5)] active:scale-95 transition-all border border-red-400/50"
-            title="Send Emergency Distress Signal directly to Rescue Command"
+            className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 text-xs font-medium flex items-center gap-2 transition-all active:scale-95 shadow-sm"
+            title="Send Emergency Distress Signal"
           >
-            <Radio className="w-3.5 h-3.5 text-white animate-pulse" />
-            <span>🚨 SOS</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span>
+            <span>SOS</span>
           </button>
 
           <button
