@@ -942,7 +942,17 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&origin=${currentOrigin.coords[0]},${currentOrigin.coords[1]}&destination=${currentShelter.coords.lat},${currentShelter.coords.lng}&waypoints=30.4610,79.3520|30.4450,79.3380|30.4310,79.3310&travelmode=driving`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
+                  title="Open this safe evacuation route with turn-by-turn navigation in Google Maps"
+                >
+                  <Navigation className="w-3.5 h-3.5" />
+                  <span>Open Safe Route in Google Maps ↗</span>
+                </a>
                 <button
                   onClick={handleCopyCoordinates}
                   className="text-xs px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-slate-200 border border-white/10 flex items-center gap-1.5 transition-colors"
@@ -967,10 +977,21 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Origin Selector */}
               <div className="p-4 rounded-xl bg-[#0e1933] border border-white/10 space-y-2">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                  <span className="text-red-400 font-bold">🚩</span>
-                  <span>Select Origin Disaster Location (Current Position):</span>
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                    <span className="text-red-400 font-bold">🚩</span>
+                    <span>Select Origin Disaster Location (Current Position):</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${currentOrigin.coords[0]},${currentOrigin.coords[1]}`, '_blank')}
+                    className="text-[10px] font-mono text-sky-400 hover:text-sky-300 flex items-center gap-1"
+                    title="View Origin location in Google Maps"
+                  >
+                    <span>Google Maps</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </button>
+                </div>
                 <select
                   value={selectedOriginKey}
                   onChange={(e) => setSelectedOriginKey(e.target.value)}
@@ -989,10 +1010,21 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({
 
               {/* Destination Shelter Selector */}
               <div className="p-4 rounded-xl bg-[#0e1933] border border-white/10 space-y-2">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                  <span className="text-emerald-400 font-bold">🏁</span>
-                  <span>Select Destination Safe Shelter:</span>
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                    <span className="text-emerald-400 font-bold">🏁</span>
+                    <span>Select Destination Safe Shelter:</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${currentShelter.coords.lat},${currentShelter.coords.lng}`, '_blank')}
+                    className="text-[10px] font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
+                    title="View Shelter location in Google Maps"
+                  >
+                    <span>Google Maps</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </button>
+                </div>
                 <select
                   value={selectedShelterId}
                   onChange={(e) => setSelectedShelterId(e.target.value)}
@@ -1075,37 +1107,69 @@ export const UnifiedDashboard: React.FC<UnifiedDashboardProps> = ({
               </div>
             </div>
 
-            {/* Turn-by-Turn Waypoint Guidance Strip */}
+            {/* Turn-by-Turn Waypoint Guidance Strip with Clickable Google Maps Links */}
             <div className="p-4 rounded-xl bg-[#091224] border border-white/10 space-y-2.5">
               <div className="text-xs font-semibold text-slate-200 flex items-center justify-between">
-                <span>Safe Waypoint Navigation Checklist:</span>
+                <span>Safe Waypoint Navigation Checklist (Click any point to open in Google Maps):</span>
                 <span className="text-[11px] font-mono text-emerald-400">High-Ground Clear Path</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 text-xs font-mono">
-                <div className="p-2.5 rounded-lg bg-[#0e1933] border border-white/5 space-y-1">
-                  <div className="text-[10px] text-slate-400">WAYPOINT 1 · START</div>
-                  <div className="font-bold text-white truncate">{currentOrigin.name}</div>
+                <button
+                  type="button"
+                  onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${currentOrigin.coords[0]},${currentOrigin.coords[1]}`, '_blank')}
+                  className="p-2.5 rounded-lg bg-[#0e1933] hover:bg-sky-950/60 border border-white/5 hover:border-sky-500/40 space-y-1 text-left transition-colors group"
+                  title="Open Waypoint 1 in Google Maps"
+                >
+                  <div className="text-[10px] text-slate-400 flex items-center justify-between">
+                    <span>WAYPOINT 1 · START</span>
+                    <ExternalLink className="w-2.5 h-2.5 text-sky-400 opacity-70 group-hover:opacity-100" />
+                  </div>
+                  <div className="font-bold text-white truncate group-hover:text-sky-300">{currentOrigin.name}</div>
                   <div className="text-[10px] text-slate-400">Ascend via Ridge Road</div>
-                </div>
+                </button>
 
-                <div className="p-2.5 rounded-lg bg-[#0e1933] border border-white/5 space-y-1">
-                  <div className="text-[10px] text-slate-400">WAYPOINT 2 · KM 3.2</div>
+                <button
+                  type="button"
+                  onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=30.4610,79.3520`, '_blank')}
+                  className="p-2.5 rounded-lg bg-[#0e1933] hover:bg-sky-950/60 border border-white/5 hover:border-sky-500/40 space-y-1 text-left transition-colors group"
+                  title="Open Waypoint 2 in Google Maps"
+                >
+                  <div className="text-[10px] text-slate-400 flex items-center justify-between">
+                    <span>WAYPOINT 2 · KM 3.2</span>
+                    <ExternalLink className="w-2.5 h-2.5 text-sky-400 opacity-70 group-hover:opacity-100" />
+                  </div>
                   <div className="font-bold text-sky-300 truncate">Upper Terrace Checkpoint</div>
                   <div className="text-[10px] text-slate-400">Elev: 1,520m · Mud-free</div>
-                </div>
+                </button>
 
-                <div className="p-2.5 rounded-lg bg-[#0e1933] border border-white/5 space-y-1">
-                  <div className="text-[10px] text-slate-400">WAYPOINT 3 · KM 7.8</div>
+                <button
+                  type="button"
+                  onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=30.4450,79.3380`, '_blank')}
+                  className="p-2.5 rounded-lg bg-[#0e1933] hover:bg-sky-950/60 border border-white/5 hover:border-sky-500/40 space-y-1 text-left transition-colors group"
+                  title="Open Waypoint 3 in Google Maps"
+                >
+                  <div className="text-[10px] text-slate-400 flex items-center justify-between">
+                    <span>WAYPOINT 3 · KM 7.8</span>
+                    <ExternalLink className="w-2.5 h-2.5 text-sky-400 opacity-70 group-hover:opacity-100" />
+                  </div>
                   <div className="font-bold text-sky-300 truncate">North Ridge Crest (1,680m)</div>
                   <div className="text-[10px] text-slate-400">Bypasses Birahi Gorge</div>
-                </div>
+                </button>
 
-                <div className="p-2.5 rounded-lg bg-[#0e1933] border border-white/5 space-y-1">
-                  <div className="text-[10px] text-slate-400">WAYPOINT 4 · ARRIVAL</div>
+                <button
+                  type="button"
+                  onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${currentShelter.coords.lat},${currentShelter.coords.lng}`, '_blank')}
+                  className="p-2.5 rounded-lg bg-[#0e1933] hover:bg-emerald-950/60 border border-white/5 hover:border-emerald-500/40 space-y-1 text-left transition-colors group"
+                  title="Open Waypoint 4 in Google Maps"
+                >
+                  <div className="text-[10px] text-slate-400 flex items-center justify-between">
+                    <span>WAYPOINT 4 · ARRIVAL</span>
+                    <ExternalLink className="w-2.5 h-2.5 text-emerald-400 opacity-70 group-hover:opacity-100" />
+                  </div>
                   <div className="font-bold text-emerald-400 truncate">{currentShelter.name}</div>
                   <div className="text-[10px] text-emerald-300">Safe Haven Reached</div>
-                </div>
+                </button>
               </div>
             </div>
           </section>

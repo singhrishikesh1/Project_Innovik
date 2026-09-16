@@ -723,6 +723,24 @@ export const evacuationRoutesData: EvacuationRoute[] = [
     status: 'SAFE',
     roadSegmentId: 'RIDGE-BYPASS-01',
     isAlternativeRoute: true
+  },
+  {
+    id: 'ROUTE-RIV-03',
+    name: 'Joshimath Foothills to Joshimath Municipal Shelter',
+    originName: 'Joshimath Foothills Hamlet',
+    originCoords: { lat: 30.5480, lng: 79.5580 },
+    destinationShelterId: 'SHELTER-04',
+    destinationShelterName: 'Joshimath Municipal Disaster Relief Complex',
+    destinationCoords: { lat: 30.5560, lng: 79.5640 },
+    waypoints: [
+      { lat: 30.5480, lng: 79.5580 },
+      { lat: 30.5520, lng: 79.5610 },
+      { lat: 30.5560, lng: 79.5640 }
+    ],
+    distanceKm: 2.1,
+    estimatedTravelTimeMin: 12,
+    status: 'SAFE',
+    roadSegmentId: 'JM-UPPER-RD'
   }
 ];
 
