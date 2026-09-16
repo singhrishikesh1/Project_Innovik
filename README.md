@@ -1,4 +1,4 @@
-# VajraShield: AI-Powered Disaster Intelligence & Emergency Command Platform
+# VajraWatch: AI-Powered Disaster Intelligence & Emergency Command Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Frontend](https://img.shields.io/badge/Frontend-React%2018%20%7C%20TypeScript%20%7C%20TailwindCSS-sky.svg)](frontend)
