@@ -12,7 +12,7 @@ SAHAYAK is a full-lifecycle emergency management command-and-control platform de
 
 ---
 
-## Key Pillars & Capabilities
+## Key Pillars & 
 
 1. **SAHAYAK Deterministic 8-Feature Prediction Engine**:
    - Model-driven numerical hazard scoring (0–100) based on precipitation intensity/accumulation, river stage gauge height, terrain slope and soil saturation, Sentinel-2 NDWI anomalies, Sentinel-1 SAR backscatter shift, glacial lake extent expansion, seismic PGA, and temperature isotherms.
