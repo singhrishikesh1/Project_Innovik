@@ -124,5 +124,3 @@ Use the embedded **Simulation Control Bar** at the top of the interface to step 
 ## Automated 
 Run the complete backend automated test suite verifying risk calculation, skeptic validation, spatial queries, and inventory conservation:
 ```bash
-
-npm run build && node dist/backend/src/tests
