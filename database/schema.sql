@@ -2,7 +2,7 @@
 -- VAJRASHIELD ENTERPRISE DISASTER COMMAND PLATFORM
 -- PostgreSQL + PostGIS Relational & Spatial Database Schema
 -- ==============================================================================
--- Enable 
+
 CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
