@@ -131,6 +131,3 @@ Run the complete backend automated test suite verifying risk calculation, skepti
 cd backend
 npm run build && node dist/backend/src/tests/test_engine
 ```
-
----
-
