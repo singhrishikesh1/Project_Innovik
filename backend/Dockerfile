@@ -13,3 +13,5 @@ COPY --from=builder /app/backend/dist ./dist
 RUN npm install --omit=dev
 EXPOSE 5001
 CMD ["node", "dist/server.js"]
+
+
