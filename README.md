@@ -11,7 +11,6 @@
 SAHAYAK is a full-lifecycle emergency management command-and-control platform designed for disaster management authorities (NDMA, SDMAs, FEMA, UN OCHA), humanitarian agencies, and first responders. It integrates **VajraWatch** as its specialized prediction and early warning engine, delivering deterministic hazard scoring, adversarial skeptical verification, real-time 24-layer GIS mapping, dynamic evacuation routing around active road hazards, mathematical inventory conservation, and automated post-disaster PDF report generation.
 
 ---
-
 ## Key Pillars & 
 
 1. **SAHAYAK Deterministic 8-Feature Prediction Engine**:
