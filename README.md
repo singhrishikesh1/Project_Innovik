@@ -98,7 +98,6 @@ Access the application at `http://localhost:3000`.
 ## 20-Step Hackathon Demonstration Guide
 
 Use the embedded **Simulation Control Bar** at the top of the interface to step through the complete scenario:
-
 | Step | Milestone Title | Key System Action |
 | :--- | :--- | :--- |
 | **01** | **Normal Baseline** | Monitoring baseline hydrology (River stage 2.1m, Risk 18.2/100 NORMAL). |
