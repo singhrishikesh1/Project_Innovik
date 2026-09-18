@@ -11,8 +11,7 @@
 SAHAYAK is a full-lifecycle emergency management command-and-control platform designed for disaster management authorities (NDMA, SDMAs, FEMA, UN OCHA), humanitarian agencies, and first responders. It integrates **VajraWatch** as its specialized prediction and early warning engine, delivering deterministic hazard scoring, adversarial skeptical verification, real-time 24-layer GIS mapping, dynamic evacuation routing around active road hazards, mathematical inventory conservation, and automated post-disaster PDF report generation.
 
 
-## Key Pillars & 
-
+## Key Pillars 
 1. **SAHAYAK Deterministic 8
    - Model-driven numerical hazard scoring (0–100) based on precipitation intensity/accumulation, river stage gauge height, terrain slope and soil saturation, Sentinel-2 NDWI anomalies, Sentinel-1 SAR backscatter shift, glacial lake extent expansion, seismic PGA, and temperature isotherms.
    - Numerical scores are 100% computed via calibrated physical algorithms—AI agents provide explainability and decision support without hallucinating statistics.
