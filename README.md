@@ -55,7 +55,7 @@ SAHAYAK is a full-lifecycle emergency management command-and-control platform de
 
 ## Quickstart Setup
 
-### Prerequisites
+
 - Node.js (v18+)
 - Python (v3.9+) [Optional for microservice; backend includes zero-dependency fallback]
 - Docker & Docker Compose [Optional for containerized run]
