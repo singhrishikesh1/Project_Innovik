@@ -95,7 +95,7 @@ Access the application at `http://localhost:3000`.
 
 ---
 
-## 20-Step Hackathon Demonstration Guide
+## 20-Step Hackathon Demonstration 
 
 Use the embedded **Simulation Control Bar** at the top of the interface to step through the complete scenario:
 | Step | Milestone Title | Key System Action |
