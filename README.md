@@ -135,4 +135,4 @@ npm run build && node dist/backend/src/tests/test_engine.js
 ---
 
 ## License
-MIT License. Built for International Emergency Management & 
+MIT License. Built for International Emergency Management 
