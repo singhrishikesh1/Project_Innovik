@@ -92,7 +92,7 @@ docker-compose up --build
 ```
 Access the application at `http://localhost:3000`.
 
----
+
 
 ## 20-Step Hackathon Demonstration 
 
