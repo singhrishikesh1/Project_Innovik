@@ -120,7 +120,3 @@ Use the embedded **Simulation Control Bar** at the top of the interface to step 
 | **20** | **1-Click PDF Report Export**| User clicks "Download Official PDF Report" to export a 20-section printable document. |
 
 ---
-
-## Automated 
-Run the complete backend automated test suite verifying risk calculation, skeptic validation, spatial queries, and inventory conservation:
-```bash
